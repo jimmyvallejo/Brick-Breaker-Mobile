@@ -1,5 +1,6 @@
 let x = 900;
 let y = 500 - 20;
+const interval = setInterval(updateGameArea, 20);
 
 const myGameArea = {
     canvas: document.createElement('canvas'),
@@ -8,16 +9,17 @@ const myGameArea = {
         this.canvas.height = 500;
         this.context = this.canvas.getContext('2d');
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-        this.interval = setInterval(updateGameArea, 20);
-
+        
+        
+         
     },
      clear: function(){
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
      },
-     stop: function(){
+     stop: function() {
         clearInterval(this.interval);
-        this.con.fillStyle = "black";
-     }
+      }
+     
 };
 
 class Component {
@@ -31,6 +33,8 @@ class Component {
         this. speedY = 0;
         this.velocityX = velocityX;
         this.velocityY = velocityY;
+        this.speedReverse = 900;
+        
     }
     update(){
         const ctx = myGameArea.context;
@@ -39,21 +43,50 @@ class Component {
     }
 
     newPos(){
-        this.x += this.speedX;
+        
         this.y += this.speedY;
+        if (this.x < 0){
+            this.x =+ this.speedX;
+            console.log('colliding');
+       } else if (this.x > myGameArea.canvas.width - 172){
+        this.x = myGameArea.canvas.width - 172;
+        this.x -= this.speedX;
+        console.log('colliding');
+       }
+        else {
+        this.x += this.speedX;
+       }
+        
     }
 
     move(){
         this.x += this.velocityX
         this.y += this.velocityY;
     }
-}
+    left() {
+        return this.x;
+      }
+      right() {
+        return this.x + this.width;
+      }
+      top() {
+        return this.y;
+      }
+      bottom() {
+        return this.y + this.height;
+      }
+    
+  
+    }
+
+
+
 
 
 
 
 const player = new Component(175, 20, '#C0DEFF', 350, 480);
-const ball = new Component(20, 20, "white", 350, 250, 0, -2);
+const ball = new Component(20, 20, "white", 420, 200, 0, 0);
 
 
 
@@ -67,18 +100,14 @@ function updateGameArea(){
     bricks.forEach(function(brick){
         brick.update();
       });
-      
       ball.move();
       ball.update();
-      
-      CollisionDetectionBrick();
-      collisionDetectionWalls();
+      stopVelocity();
       collisionDetectionPlayer();
+      collisionDetectionWall();
+      collisionDetectionBrick();
       
-      if (ball.y + ball.height > myGameArea.canvas.height) {
-        myGameArea.stop();
-      }
- 
+      
 
 }
 
@@ -109,36 +138,74 @@ function generateBricks(){
 
 }
 
-function CollisionDetectionBrick(){
+function collisionDetectionBrick(){
     for(let c = 0; c < brickColumnCount; c++){
         for (let r = 0; r < brickRowCount; r++){
             const b = bricks[c * brickRowCount + r];
-            if (ball.x > b.x && ball.x < b.x + b.width && ball.y > b.y && ball.y < b.y + b.height) {
+            if (ball.x > b.x && ball.x < b.x + b.width +10 && ball.y > b.y && ball.y < b.y + b.height + 5) {
                 ball.velocityY = -ball.velocityY;
                 bricks.splice(c * brickRowCount + r, 1);
+            
             }
         }
     }
 }
 
 function collisionDetectionPlayer() {
-    const player = new Component(175, 20, '#C0DEFF', 350, 480);
-    
     if (ball.x + ball.width > player.x && ball.x < player.x + player.width &&
         ball.y + ball.height > player.y && ball.y < player.y + player.height) {
-        ball.velocityY = +ball.velocityY;
-    }
+        ball.velocityY = -ball.velocityY;
+        ball.velocityX--;
+        ball.velocityY = ball.velocityY - 0.3;
+        ;
+    } 
 }
 
+function collisionDetectionWall(){
+    if (ball.y > 500 - 20){
+       clearInterval(interval);
+     } if (ball.x < 0){
+        ball.velocityX = -ball.velocityX;
+        ball.velocityX = ball.velocityX + 0.5;
+     } if (ball.x > 900 - 20){
+        ball.velocityX = -ball.velocityX;
+        
+     } if (ball.y < 0 ){
+        ball.velocityY = -ball.velocityY;
+        
+     } if (player.x === 500){
+        player.speedX = 0;
+     } if (player.x === 0){
+        player.speedX === 0;
+     }
+    }
 
+ let maxVelocityX = 4
+ let maxVelocityY = 5;
+
+
+function stopVelocity(){
+    
+    
+    if (ball.velocityX > maxVelocityX + 1) {
+        ball.velocityX = maxVelocityX;
+      }
+      if (ball.velocityY > maxVelocityY + 1) {
+        ball.velocityY = maxVelocityY;
+      } if (ball.velocityX < -maxVelocityX - 1) {
+        ball.velocityX = -maxVelocityX;
+      } if (ball.velocityY < maxVelocityY - 1) {
+        ball.velocityY = -maxVelocityY;
+      } 
+}
 
 document.addEventListener('keydown', (e) => {
     switch(e.keyCode){
         case 37:
-            player.speedX = -4;
+            player.speedX = -7;
             break;
         case 39:
-            player.speedX = 4;
+            player.speedX = 7;
             break;
     }
 });
