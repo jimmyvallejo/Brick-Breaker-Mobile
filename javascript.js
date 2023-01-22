@@ -1,5 +1,6 @@
-let x = 900;
-let y = 500 - 20;
+const hitPaddle = new Audio('270343__littlerobotsoundfactory__shoot-01.wav');
+const hitBrick = new Audio('270303__littlerobotsoundfactory__collect-point-01.wav');
+const gameLose = new Audio('270329__littlerobotsoundfactory__jingle-lose-00.wav');
 const interval = setInterval(updateGameArea, 20);
 
 const myGameArea = {
@@ -121,9 +122,9 @@ let bricks = [];
 
 function generateBricks(){
     const brickWidth = 100;
-    const brickHeight = 30;
+    const brickHeight = 22;
     const brickPadding = 10;
-    const brickOffsetTop = 30;
+    const brickOffsetTop = 60;
     const brickOffsetLeft = 15;
 
   for (let c = 0; c < brickColumnCount; c++){
@@ -145,7 +146,7 @@ function collisionDetectionBrick(){
             if (ball.x > b.x && ball.x < b.x + b.width +10 && ball.y > b.y && ball.y < b.y + b.height + 5) {
                 ball.velocityY = -ball.velocityY;
                 bricks.splice(c * brickRowCount + r, 1);
-            
+                hitBrick.play();
             }
         }
     }
@@ -156,14 +157,15 @@ function collisionDetectionPlayer() {
         ball.y + ball.height > player.y && ball.y < player.y + player.height) {
         ball.velocityY = -ball.velocityY;
         ball.velocityX--;
-        ball.velocityY = ball.velocityY - 0.3;
-        ;
+        ball.velocityY--;
+        hitPaddle.play();
     } 
 }
 
 function collisionDetectionWall(){
     if (ball.y > 500 - 20){
        clearInterval(interval);
+       gameLose.play();
      } if (ball.x < 0){
         ball.velocityX = -ball.velocityX;
         ball.velocityX = ball.velocityX + 0.5;
@@ -190,11 +192,11 @@ function stopVelocity(){
     if (ball.velocityX > maxVelocityX + 1) {
         ball.velocityX = maxVelocityX;
       }
-      if (ball.velocityY > maxVelocityY + 1) {
+      if (ball.velocityY > maxVelocityY + 3) {
         ball.velocityY = maxVelocityY;
       } if (ball.velocityX < -maxVelocityX - 1) {
         ball.velocityX = -maxVelocityX;
-      } if (ball.velocityY < maxVelocityY - 1) {
+      } if (ball.velocityY < maxVelocityY - 3) {
         ball.velocityY = -maxVelocityY;
       } 
 }
