@@ -2,10 +2,16 @@ const hitPaddle = new Audio('270343__littlerobotsoundfactory__shoot-01.wav');
 const hitBrick = new Audio('270303__littlerobotsoundfactory__collect-point-01.wav');
 const gameLose = new Audio('270329__littlerobotsoundfactory__jingle-lose-00.wav');
 
-
+const gameStart = new Audio
+('game-start-6104.mp3');
 
 const interval = setInterval(updateGameArea, 20);
 
+const button = document.createElement('button');
+button.innerHTML = "RESTART";
+
+const span = document.getElementById('span');
+const div = document.getElementById('div');
 
 let life = 4;
 
@@ -149,11 +155,8 @@ function updateGameArea(){
       stopVelocity();
       collisionDetectionPlayer();
       collisionDetectionWall();
-      
       collisionDetectionBrick();
       
-     
-
 }
 
 
@@ -178,6 +181,7 @@ function generateBricks(){
       
      const brick = new Component (brickWidth, brickHeight, "red", brickX, brickY);
       bricks.push(brick);
+   
     }
   }
 
@@ -193,7 +197,8 @@ function collisionDetectionBrick(){
                 hitBrick.play();
                 changeScore++;
                 score.text = `Score: ${changeScore}`;
-                console.log(changeScore);
+                nextLevel();
+                
                 
             }
         }
@@ -233,7 +238,7 @@ function collisionDetectionWall(){
      }
     }
 
- let maxVelocityX = 4;
+ let maxVelocityX = 6;
  let maxVelocityY = 5;
 
 
@@ -252,11 +257,12 @@ function stopVelocity(){
 
 
 function nextLevel(){
-  if (bricks.length == 0){
-    generateBricks();
+  if (score == 24){
     brickColumnCount++;
     brickRowCount++;
-    ball.velocityY++;
+    generateBricks();
+    maxVelocityX = 5;
+    maxVelocityY = 6;
   }
 }
 
@@ -265,6 +271,10 @@ function gameOver(){
   if (life <= 0){
     clearInterval(interval);
     gameLose.play();
+    myGameArea.clear();
+    document.body.appendChild(button);
+    
+
   }
 }
 
@@ -301,9 +311,16 @@ document.addEventListener('keyup', (e) => {
     player.speedY = 0;
 });
 
+span.addEventListener('click', function(){
+div.remove();
 myGameArea.start();
 generateBricks();
+gameStart.play();
+});
 
+button.addEventListener('click', function(){
+  location.reload();
+});
 
 
 
