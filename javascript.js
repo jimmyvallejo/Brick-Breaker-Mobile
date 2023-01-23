@@ -1,7 +1,17 @@
 const hitPaddle = new Audio('270343__littlerobotsoundfactory__shoot-01.wav');
 const hitBrick = new Audio('270303__littlerobotsoundfactory__collect-point-01.wav');
 const gameLose = new Audio('270329__littlerobotsoundfactory__jingle-lose-00.wav');
+
+
+
 const interval = setInterval(updateGameArea, 20);
+
+
+let life = 4;
+
+let changeScore = 0;
+
+
 
 const myGameArea = {
     canvas: document.createElement('canvas'),
@@ -22,6 +32,10 @@ const myGameArea = {
       }
      
 };
+
+const ctx = myGameArea.context;
+
+
 
 class Component {
     constructor(width, height, color, x, y, velocityX, velocityY){
@@ -48,11 +62,9 @@ class Component {
         this.y += this.speedY;
         if (this.x < 0){
             this.x =+ this.speedX;
-            console.log('colliding');
        } else if (this.x > myGameArea.canvas.width - 172){
         this.x = myGameArea.canvas.width - 172;
         this.x -= this.speedX;
-        console.log('colliding');
        }
         else {
         this.x += this.speedX;
@@ -64,37 +76,64 @@ class Component {
         this.x += this.velocityX
         this.y += this.velocityY;
     }
-    left() {
-        return this.x;
-      }
-      right() {
-        return this.x + this.width;
-      }
-      top() {
-        return this.y;
-      }
-      bottom() {
-        return this.y + this.height;
-      }
-    
-  
     }
 
 
+class ImageComponent {
+  constructor(src, x, y, width, height){
+    this.image = new Image();
+    this.image.src = src;
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+  }
+  
+  update(){
+    const ctx = myGameArea.context;
+    ctx.fillStyle = this.color;
+    ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+}
+
+}
+
+class TextComponent{
+  constructor(text, x, y, font, color){
+    this.text = text;
+    this.x = x;
+    this.y = y;
+    this.font = font;
+    this.color = color;
+    this.score = changeScore
+  }
+  update(){
+    const ctx = myGameArea.context;
+    ctx.font = this.font;
+    ctx.fillStyle = this.color;
+    
+    ctx.fillText(this.text, this.x, this.y);
+    }
+}
 
 
 
 
+const score = new TextComponent(`Score: ${changeScore}`, 20, 30, "20px Arial", "black");
 
 const player = new Component(175, 20, '#C0DEFF', 350, 480);
 const ball = new Component(20, 20, "white", 420, 200, 0, 0);
 
+const lives = [
+  new ImageComponent("87.png", 822, 15, 20, 20),
+  new ImageComponent("87.png", 800, 15, 20, 20),
+  new ImageComponent("87.png", 778, 15, 20, 20)
+];
 
 
 
 function updateGameArea(){
     
-    
+  
     myGameArea.clear();
     player.newPos();
     player.update();
@@ -103,12 +142,17 @@ function updateGameArea(){
       });
       ball.move();
       ball.update();
+      lives.forEach(function(life) {
+        life.update();
+    });
+    score.update();
       stopVelocity();
       collisionDetectionPlayer();
       collisionDetectionWall();
+      
       collisionDetectionBrick();
       
-      
+     
 
 }
 
@@ -124,7 +168,7 @@ function generateBricks(){
     const brickWidth = 100;
     const brickHeight = 22;
     const brickPadding = 10;
-    const brickOffsetTop = 60;
+    const brickOffsetTop = 70;
     const brickOffsetLeft = 15;
 
   for (let c = 0; c < brickColumnCount; c++){
@@ -144,9 +188,13 @@ function collisionDetectionBrick(){
         for (let r = 0; r < brickRowCount; r++){
             const b = bricks[c * brickRowCount + r];
             if (ball.x > b.x && ball.x < b.x + b.width +10 && ball.y > b.y && ball.y < b.y + b.height + 5) {
-                ball.velocityY = -ball.velocityY;
+              ball.velocityY = -ball.velocityY;
                 bricks.splice(c * brickRowCount + r, 1);
                 hitBrick.play();
+                changeScore++;
+                score.text = `Score: ${changeScore}`;
+                console.log(changeScore);
+                
             }
         }
     }
@@ -164,8 +212,11 @@ function collisionDetectionPlayer() {
 
 function collisionDetectionWall(){
     if (ball.y > 500 - 20){
-       clearInterval(interval);
-       gameLose.play();
+       life--;
+       updateLives();
+       resetBall();
+       gameOver();
+       
      } if (ball.x < 0){
         ball.velocityX = -ball.velocityX;
         ball.velocityX = ball.velocityX + 0.5;
@@ -182,13 +233,11 @@ function collisionDetectionWall(){
      }
     }
 
- let maxVelocityX = 4
+ let maxVelocityX = 4;
  let maxVelocityY = 5;
 
 
 function stopVelocity(){
-    
-    
     if (ball.velocityX > maxVelocityX + 1) {
         ball.velocityX = maxVelocityX;
       }
@@ -200,6 +249,41 @@ function stopVelocity(){
         ball.velocityY = -maxVelocityY;
       } 
 }
+
+
+function nextLevel(){
+  if (bricks.length == 0){
+    generateBricks();
+    brickColumnCount++;
+    brickRowCount++;
+    ball.velocityY++;
+  }
+}
+
+
+function gameOver(){
+  if (life <= 0){
+    clearInterval(interval);
+    gameLose.play();
+  }
+}
+
+function resetBall(){
+  ball.x = 420;
+  ball.y = 200;
+}
+
+
+function updateLives(){
+  if (life == 3){
+    lives.splice(0,1);
+  } else if (life == 2){
+    lives.splice(0,1);
+  } else if (life == 1){
+    lives.splice(0,1);
+  }
+}
+
 
 document.addEventListener('keydown', (e) => {
     switch(e.keyCode){
@@ -219,5 +303,7 @@ document.addEventListener('keyup', (e) => {
 
 myGameArea.start();
 generateBricks();
+generateHearts();
+
 
 
