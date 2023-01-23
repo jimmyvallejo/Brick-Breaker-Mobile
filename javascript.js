@@ -303,7 +303,7 @@ document.addEventListener('keyup', (e) => {
 
 myGameArea.start();
 generateBricks();
-generateHearts();
+
 
 
 
