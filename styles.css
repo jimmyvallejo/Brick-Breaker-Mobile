@@ -22,6 +22,15 @@ h1 {
     font-size: 60px;
 }
 
+h2{
+  font-size: 40px;
+  font-family: 'Silkscreen', cursive;
+}
+
+#new-game{
+margin-top: -70px;
+}
+
 button{
     position: fixed;
     width: 200px;

@@ -1,22 +1,26 @@
 const hitPaddle = new Audio('270343__littlerobotsoundfactory__shoot-01.wav');
 const hitBrick = new Audio('270303__littlerobotsoundfactory__collect-point-01.wav');
 const gameLose = new Audio('270329__littlerobotsoundfactory__jingle-lose-00.wav');
-
+const gameWinSound = new Audio('341985__unadamlar__goodresult.wav');
 const gameStart = new Audio
 ('game-start-6104.mp3');
+const button = document.createElement('button');
+const button2 = document.createElement('button');
+button2.setAttribute('id', "new-game")
+button2.innerHTML = "NEW GAME"
+const h2 = document.createElement('h2')
+h2.innerHTML = "YOU WIN!"
+const span = document.getElementById('span');
+const div = document.getElementById('div');
+button.innerHTML = "RESTART";
+
 
 const interval = setInterval(updateGameArea, 20);
 
-const button = document.createElement('button');
-button.innerHTML = "RESTART";
-
-const span = document.getElementById('span');
-const div = document.getElementById('div');
 
 let life = 4;
-
 let changeScore = 0;
-
+let levelCount = 1;
 
 
 const myGameArea = {
@@ -26,9 +30,6 @@ const myGameArea = {
         this.canvas.height = 500;
         this.context = this.canvas.getContext('2d');
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-        
-        
-         
     },
      clear: function(){
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -124,18 +125,21 @@ class TextComponent{
 
 
 
-const score = new TextComponent(`Score: ${changeScore}`, 20, 30, "20px Arial", "black");
+const score = new TextComponent(`Score: ${changeScore}`, 20, 30, "20px Lucida Console", "black");
+
+const level = new TextComponent(`${levelCount}`,450, 35, "30px Lucida Console",
+"black");
 
 const player = new Component(175, 20, '#C0DEFF', 350, 480);
-const ball = new Component(20, 20, "white", 420, 200, 0, 0);
+const ball = new Component(20, 20, "white", 440, 200, 0, 0);
 
 const lives = [
-  new ImageComponent("87.png", 822, 15, 20, 20),
-  new ImageComponent("87.png", 800, 15, 20, 20),
-  new ImageComponent("87.png", 778, 15, 20, 20)
+  new ImageComponent("87.png", 862, 15, 20, 20),
+  new ImageComponent("87.png", 840, 15, 20, 20),
+  new ImageComponent("87.png", 818, 15, 20, 20)
 ];
 
-
+const levelImg = new ImageComponent("clipart851029.png",425 ,15, 20, 20)
 
 function updateGameArea(){
     
@@ -152,6 +156,8 @@ function updateGameArea(){
         life.update();
     });
     score.update();
+    levelImg.update();
+    level.update();
       stopVelocity();
       collisionDetectionPlayer();
       collisionDetectionWall();
@@ -167,13 +173,15 @@ let brickRowCount = 8;
 
 let bricks = [];
 
-function generateBricks(){
+
     const brickWidth = 100;
     const brickHeight = 22;
     const brickPadding = 10;
     const brickOffsetTop = 70;
     const brickOffsetLeft = 15;
 
+function generateBricks(){
+    
   for (let c = 0; c < brickColumnCount; c++){
     for (let r = 0; r < brickRowCount; r++){
         const brickX = (r * (brickWidth + brickPadding)) + brickOffsetLeft;
@@ -184,14 +192,13 @@ function generateBricks(){
    
     }
   }
-
 }
 
 function collisionDetectionBrick(){
     for(let c = 0; c < brickColumnCount; c++){
         for (let r = 0; r < brickRowCount; r++){
             const b = bricks[c * brickRowCount + r];
-            if (ball.x > b.x && ball.x < b.x + b.width +10 && ball.y > b.y && ball.y < b.y + b.height + 5) {
+            if ((ball.x > b.x && ball.x < b.x + b.width +10 || ball.x + ball.width > b.x && ball.x + ball.width < b.x + b.width) && (ball.y > b.y && ball.y < b.y + b.height + 5 || ball.y + ball.height > b.y && ball.y + ball.height < b.y + b.height))  {
               ball.velocityY = -ball.velocityY;
                 bricks.splice(c * brickRowCount + r, 1);
                 hitBrick.play();
@@ -210,7 +217,7 @@ function collisionDetectionPlayer() {
         ball.y + ball.height > player.y && ball.y < player.y + player.height) {
         ball.velocityY = -ball.velocityY;
         ball.velocityX--;
-        ball.velocityY--;
+        ball.velocityY -= 2;
         hitPaddle.play();
     } 
 }
@@ -257,15 +264,37 @@ function stopVelocity(){
 
 
 function nextLevel(){
-  if (score == 24){
+  if (changeScore == 24){
+    levelCount++;
+    level.text = `${levelCount}`;
+    resetBall();
     brickColumnCount++;
-    brickRowCount++;
     generateBricks();
     maxVelocityX = 5;
     maxVelocityY = 6;
+    
+  } else if (changeScore == 56){
+    levelCount++;
+    level.text = `${levelCount}`;
+    resetBall();
+    brickColumnCount++;
+    generateBricks();
+    maxVelocityX = 6;
+    maxVelocityY = 8;
+   
+  }else if (changeScore == 96){
+      gameWin();
   }
 }
 
+
+function gameWin(){
+  clearInterval(interval);
+  gameWinSound.play();
+  myGameArea.clear();
+  document.body.appendChild(h2);
+  document.body.appendChild(button2);
+}
 
 function gameOver(){
   if (life <= 0){
@@ -279,8 +308,8 @@ function gameOver(){
 }
 
 function resetBall(){
-  ball.x = 420;
-  ball.y = 200;
+  ball.x = 440;
+  ball.y = 240;
 }
 
 
@@ -323,4 +352,6 @@ button.addEventListener('click', function(){
 });
 
 
-
+button2.addEventListener('click', function(){
+  location.reload();
+})
