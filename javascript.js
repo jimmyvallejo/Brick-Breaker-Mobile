@@ -239,9 +239,13 @@ function collisionDetectionPlayer() {
     if (ball.x + ball.width > player.x && ball.x < player.x + player.width &&
         ball.y + ball.height > player.y && ball.y < player.y + player.height) {
         ball.velocityY = -ball.velocityY;
-        ball.velocityX--;
         ball.velocityY -= 2;
         hitPaddle.play();
+        if(ball.x < player.x + player.width/2){
+          ball.velocityX -= 2;
+        }else{
+          ball.velocityX += 2;
+        }
     } 
 }
 
