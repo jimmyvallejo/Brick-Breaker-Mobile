@@ -20,15 +20,40 @@ h2.innerHTML = "YOU WIN!"
 const span = document.getElementById('span');
 const div = document.getElementById('div');
 button.innerHTML = "RESTART";
+const leaderboard = document.createElement('table')
+leaderboard.setAttribute('id', 'leaderboard');
 
 
 const interval = setInterval(updateGameArea, 20);
 
 // Variables to be changed based on condition (Score, Current level, lives)
 
+
+
 let life = 4;
-let changeScore = 0;
 let levelCount = 1;
+let changeScore = {
+  name: prompt("What is your name?", "Player One"),
+  point: 0
+  
+}
+console.log(changeScore.point)
+
+
+let scoreString = JSON.stringify(changeScore);
+localStorage.setItem("score", scoreString);
+let jsonString = localStorage.getItem("score");
+let scores = JSON.parse(jsonString);
+
+
+  let row = leaderboard.insertRow(0);
+   let names = row.insertCell(0);
+   let point = row.insertCell(1);
+   names.innerHTML = `${scores.name}:`;
+   point.innerHTML = scores.point;
+
+
+
 
 // Draws Canvas on document directly from the JS, as well as functions to clear canvas and stop animations
 
@@ -123,7 +148,7 @@ class TextComponent{
     this.y = y;
     this.font = font;
     this.color = color;
-    this.score = changeScore
+    this.score = changeScore.point
   }
   update(){
     const ctx = myGameArea.context;
@@ -137,7 +162,7 @@ class TextComponent{
 
 // All components and their initial properties
 
-const score = new TextComponent(`Score: ${changeScore}`, 20, 30, "20px Lucida Console", "black");
+const score = new TextComponent(`Score: ${changeScore.point}`, 20, 30, "20px Lucida Console", "black");
 
 const level = new TextComponent(`${levelCount}`,450, 35, "30px Lucida Console",
 "black");
@@ -219,16 +244,19 @@ also changes score based on collision detection and checks for next level based 
 */
 
 function collisionDetectionBrick(){
-    for(let c = 0; c < brickColumnCount; c++){
+   
+  for(let c = 0; c < brickColumnCount; c++){
         for (let r = 0; r < brickRowCount; r++){
             const b = bricks[c * brickRowCount + r];
             if ((ball.x > b.x && ball.x < b.x + b.width +10 || ball.x + ball.width > b.x && ball.x + ball.width < b.x + b.width) && (ball.y > b.y && ball.y < b.y + b.height + 5 || ball.y + ball.height > b.y && ball.y + ball.height < b.y + b.height))  {
               ball.velocityY = -ball.velocityY;
                 bricks.splice(c * brickRowCount + r, 1);
                 hitBrick.play();
-                changeScore++;
-                score.text = `Score: ${changeScore}`;
+                changeScore.point++;
+                score.text = `Score: ${changeScore.point}`;
+                changeScore.point = changeScore.point++;
                 nextLevel(); 
+                
             }
         }
     }
@@ -295,7 +323,7 @@ function stopVelocity(){
 // Function that changes level, redraws incremented bricks, and changes ball speed based on score check
 
 function nextLevel(){
-   if(changeScore == 24){
+   if(changeScore.point == 24){
     levelOneMusic.pause();
     levelTwoMusic.play();
     levelCount++;
@@ -305,7 +333,7 @@ function nextLevel(){
     generateBricks();
     maxVelocityX = 5;
     maxVelocityY = 6;
-  } else if (changeScore == 56){
+  } else if (changeScore.point == 56){
     levelTwoMusic.pause();
     levelThreeMusic.play();
     levelCount++;
@@ -315,7 +343,7 @@ function nextLevel(){
     generateBricks();
     maxVelocityX = 6;
     maxVelocityY = 8;
-  } else if (changeScore == 96){
+  } else if (changeScore.point == 96){
     levelThreeMusic.pause();  
     gameWin();
   }
@@ -329,6 +357,7 @@ function gameWin(){
   myGameArea.clear();
   document.body.appendChild(h2);
   document.body.appendChild(button2);
+  document.body.appendChild(leaderboard);
 }
 
 function gameOver(){
@@ -340,6 +369,7 @@ function gameOver(){
     gameLose.play();
     myGameArea.clear();
     document.body.appendChild(button);
+    document.body.appendChild(leaderboard);
   }
 }
 
@@ -363,7 +393,6 @@ function updateLives(){
     lives.splice(0,1);
   }
 }
-
 
 
 // Document and button event listeners that Start, reset game and add or remove DOM elements

@@ -50,6 +50,10 @@ footer{
     color: #fff;
 }
 
+#leaderboard{
+  margin-top: 30px;
+}
+
 .github:visited {
 color: black;
 }
