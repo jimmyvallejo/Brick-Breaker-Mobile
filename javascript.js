@@ -4,8 +4,10 @@ const hitPaddle = new Audio('Sounds/270343__littlerobotsoundfactory__shoot-01.wa
 const hitBrick = new Audio('Sounds/270303__littlerobotsoundfactory__collect-point-01.wav');
 const gameLose = new Audio('Sounds/270329__littlerobotsoundfactory__jingle-lose-00.wav');
 const gameWinSound = new Audio('Sounds/341985__unadamlar__goodresult.wav');
-const gameStart = new Audio
-('Sounds/game-start-6104.mp3');
+const gameStart = new Audio('Sounds/game-start-6104.mp3');
+const levelOneMusic = new Audio("Sounds/slowLevel.mp3");
+const levelTwoMusic = new Audio("Sounds/normal.mp3");
+const levelThreeMusic = new Audio("Sounds/Faster.mp3");
 
 // Dom Elements
 
@@ -242,9 +244,9 @@ function collisionDetectionPlayer() {
         ball.velocityY -= 2;
         hitPaddle.play();
         if(ball.x < player.x + player.width/2){
-          ball.velocityX -= 2;
+          ball.velocityX -= 3;
         }else{
-          ball.velocityX += 2;
+          ball.velocityX += 3;
         }
     } 
 }
@@ -294,6 +296,8 @@ function stopVelocity(){
 
 function nextLevel(){
    if(changeScore == 24){
+    levelOneMusic.pause();
+    levelTwoMusic.play();
     levelCount++;
     level.text = `${levelCount}`;
     resetBall();
@@ -302,6 +306,8 @@ function nextLevel(){
     maxVelocityX = 5;
     maxVelocityY = 6;
   } else if (changeScore == 56){
+    levelTwoMusic.pause();
+    levelThreeMusic.play();
     levelCount++;
     level.text = `${levelCount}`;
     resetBall();
@@ -310,7 +316,8 @@ function nextLevel(){
     maxVelocityX = 6;
     maxVelocityY = 8;
   } else if (changeScore == 96){
-      gameWin();
+    levelThreeMusic.pause();  
+    gameWin();
   }
 }
 
@@ -326,6 +333,9 @@ function gameWin(){
 
 function gameOver(){
   if (life <= 0){
+    levelOneMusic.pause();
+    levelTwoMusic.pause();
+    levelThreeMusic.pause();
     clearInterval(interval);
     gameLose.play();
     myGameArea.clear();
@@ -379,6 +389,7 @@ div.remove();
 myGameArea.start();
 generateBricks();
 gameStart.play();
+levelOneMusic.play();
 });
 
 button.addEventListener('click', function(){
