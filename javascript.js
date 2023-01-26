@@ -12,6 +12,7 @@ const levelThreeMusic = new Audio("Sounds/Faster.mp3");
 // Dom Elements
 
 const button = document.createElement('button');
+button.setAttribute('id', 'restart');
 const button2 = document.createElement('button');
 button2.setAttribute('id', "new-game")
 button2.innerHTML = "NEW GAME"
@@ -22,6 +23,8 @@ const div = document.getElementById('div');
 button.innerHTML = "RESTART";
 const leaderboard = document.createElement('table')
 leaderboard.setAttribute('id', 'leaderboard');
+const leaderTitle = document.createElement('h3')
+leaderTitle.innerHTML = "LEADERBOARDS:";
 
 
 const interval = setInterval(updateGameArea, 20);
@@ -37,7 +40,7 @@ let changeScore = {
   point: 0
   
 }
-console.log(changeScore.point)
+
 
 
 let scoreString = JSON.stringify(changeScore);
@@ -45,15 +48,39 @@ localStorage.setItem("score", scoreString);
 let jsonString = localStorage.getItem("score");
 let scores = JSON.parse(jsonString);
 
-
-  let row = leaderboard.insertRow(0);
-   let names = row.insertCell(0);
-   let point = row.insertCell(1);
-   names.innerHTML = `${scores.name}:`;
-   point.innerHTML = scores.point;
+let highScores = JSON.parse(localStorage.getItem('highScores'))
+console.log(highScores);
 
 
 
+   function addToLocalHighScoreArray (value) {
+
+    // Get the existing data
+   let existing = localStorage.getItem("highScores");
+  
+    // If no existing data, create an array
+    // Otherwise, convert the localStorage string to an array
+    existing = existing ? JSON.parse(existing) : [];
+  
+    // Add new data to localStorage Array
+    existing.push(value);
+    let sorted = existing.sort(function(a, b) {
+      return a.point - b.point;
+    });
+    
+    sorted.forEach((score)=> {
+      let row = leaderboard.insertRow(score);
+      let names = row.insertCell(0);
+      let point = row.insertCell(1);
+      names.innerHTML = `${score.name}:`;
+      point.innerHTML = `${score.point}`;
+    });
+    
+    // Save back to localStorage
+    localStorage.setItem("highScores", JSON.stringify(existing));
+     
+  };
+  
 
 // Draws Canvas on document directly from the JS, as well as functions to clear canvas and stop animations
 
@@ -167,7 +194,7 @@ const score = new TextComponent(`Score: ${changeScore.point}`, 20, 30, "20px Luc
 const level = new TextComponent(`${levelCount}`,450, 35, "30px Lucida Console",
 "black");
 
-const player = new Component(175, 20, '#C0DEFF', 350, 480);
+const player = new Component(175, 20, '#C0DEFF', 370, 480);
 const ball = new Component(20, 20, "white", 440, 200, 0, 0);
 
 const lives = [
@@ -254,7 +281,6 @@ function collisionDetectionBrick(){
                 hitBrick.play();
                 changeScore.point++;
                 score.text = `Score: ${changeScore.point}`;
-                changeScore.point = changeScore.point++;
                 nextLevel(); 
                 
             }
@@ -357,7 +383,10 @@ function gameWin(){
   myGameArea.clear();
   document.body.appendChild(h2);
   document.body.appendChild(button2);
+  document.body.appendChild(leaderTitle);
   document.body.appendChild(leaderboard);
+  addToLocalHighScoreArray(changeScore);
+  
 }
 
 function gameOver(){
@@ -369,7 +398,9 @@ function gameOver(){
     gameLose.play();
     myGameArea.clear();
     document.body.appendChild(button);
+    document.body.appendChild(leaderTitle);
     document.body.appendChild(leaderboard);
+    addToLocalHighScoreArray(changeScore);
   }
 }
 
