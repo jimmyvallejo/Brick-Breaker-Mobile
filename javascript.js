@@ -9,6 +9,7 @@ const levelOneMusic = new Audio("Sounds/slowLevel.mp3");
 const levelTwoMusic = new Audio("Sounds/normal.mp3");
 const levelThreeMusic = new Audio("Sounds/Faster.mp3");
 
+
 // Dom Elements
 
 const button = document.createElement('button');
@@ -25,6 +26,9 @@ const leaderboard = document.createElement('table')
 leaderboard.setAttribute('id', 'leaderboard');
 const leaderTitle = document.createElement('h3')
 leaderTitle.innerHTML = "LEADERBOARDS:";
+const loseDisplay = document.createElement('h2')
+loseDisplay.innerHTML = "YOU LOSE";
+loseDisplay.setAttribute('id', 'loseDisplay');
 
 
 const interval = setInterval(updateGameArea, 20);
@@ -37,7 +41,7 @@ let life = 4;
 let levelCount = 1;
 let changeScore = {
   name: prompt("What is your name?", "Player One"),
-  point: 89
+  point: 0
   
 }
 
@@ -400,6 +404,7 @@ function gameOver(){
     document.body.appendChild(button);
     document.body.appendChild(leaderTitle);
     document.body.appendChild(leaderboard);
+    document.body.appendChild(loseDisplay);
     addToLocalHighScoreArray(changeScore);
   }
 }
