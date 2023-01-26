@@ -37,7 +37,7 @@ let life = 4;
 let levelCount = 1;
 let changeScore = {
   name: prompt("What is your name?", "Player One"),
-  point: 0
+  point: 90
   
 }
 
