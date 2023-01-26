@@ -42,7 +42,7 @@ h3{
 }
 
 button{
-    position: absolute;
+    position: fixed;
     width: 200px;
     height: 100px;
     font-size: 30px;
