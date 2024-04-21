@@ -31,7 +31,7 @@ leaderTitle.innerHTML = "LEADERBOARDS:";
 // loseDisplay.setAttribute('id', 'loseDisplay');
 
 
-const interval = setInterval(updateGameArea, 20);
+
 
 // Variables to be changed based on condition (Score, Current level, lives)
 
@@ -105,6 +105,9 @@ const myGameArea = {
     }
    
 };
+
+const interval = setInterval(updateGameArea, 20);
+
 const ctx = myGameArea.context;
 
 // Class component reused for bricks, ball and paddle. Update, newPos and move are for the purpose of updating the game area every redraw
