@@ -53,7 +53,7 @@ localStorage.setItem("score", scoreString);
 let jsonString = localStorage.getItem("score");
 let scores = JSON.parse(jsonString);
 
-let highScores = JSON.parse(localStorage.getItem('highScores')).slice(0,6)
+let highScores = JSON.parse(localStorage.getItem('highScores'))
 console.log(highScores);
 
 
