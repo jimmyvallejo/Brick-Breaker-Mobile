@@ -161,6 +161,10 @@ span a:hover {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  user-select: none; 
+  -webkit-user-select: none; 
+  -moz-user-select: none; 
+  -ms-user-select: none; 
 }
 
 #leaderboard::-webkit-scrollbar {

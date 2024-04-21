@@ -128,7 +128,7 @@ const myGameArea = {
   },
 };
 
-const interval = setInterval(updateGameArea, 20);
+let gameInterval;
 
 const ctx = myGameArea.context;
 
@@ -427,7 +427,7 @@ function nextLevel() {
 // Two functions which clear canvas and add dom elements if game win or game lose condition is met
 
 function gameWin() {
-  clearInterval(interval);
+  clearInterval(gameInterval);
   gameWinSound.play();
   myGameArea.clear();
   leftButton.remove();
@@ -446,7 +446,7 @@ function gameOver() {
     levelOneMusic.pause();
     levelTwoMusic.pause();
     levelThreeMusic.pause();
-    clearInterval(interval);
+    clearInterval(gameInterval);
     gameLose.play();
     myGameArea.clear();
     document.body.appendChild(button);
@@ -506,6 +506,8 @@ span.addEventListener("touchstart", function () {
   generateBricks();
   gameStart.play();
   levelOneMusic.play();
+  // Start the game loop after initializing the game area
+  gameInterval = setInterval(updateGameArea, 20);
 });
 
 button.addEventListener("touchstart", function () {
