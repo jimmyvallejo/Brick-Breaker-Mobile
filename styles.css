@@ -1,45 +1,51 @@
+
+
 body{
     display: flex;
-    justify-content: center;
     background-color: #2B3467;
     flex-direction: column;
     align-items: center;
+    width: 500px;
+    height: 300px;
+    text-align: center;
+
 }
 
 #div{
-    display: flex;
+   display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin-top: 30px;
+
+    width: 500px;
+    height: 300px;
 }
-canvas {
-    border: 2px solid white;
-}
+/* canvas {
+    border: 1px solid white;
+} */
 
 h1 {
     font-family: 'Silkscreen', cursive;
-    font-size: 60px;
+    font-size: 40px;
 }
 
 h2{
-  font-size: 40px;
+  font-size: 25px;
   font-family: 'Silkscreen', cursive;
   position: absolute;
-  top: 530px;
+  top: 30px;
 }
 
 
 h3{
   font-family: 'Silkscreen', cursive;
   position: absolute;
-  top: 650px;
+  top: 80px;
 }
 
 #restart{
- 
   position: absolute;
-  top: 220px;
+  top: 30px;
 }
 
 
@@ -49,9 +55,9 @@ h3{
 }
 
 button{
-    position: absolute;
+
     width: 200px;
-    height: 100px;
+    height: 50px;
     font-size: 30px;
     font-family: 'Silkscreen';
     letter-spacing: 2px;
@@ -60,12 +66,13 @@ button{
 
 footer{
     margin-top: 30px;
+    opacity: 0;
 }
 
 #leaderboard {
   font-family: 'Silkscreen';
   position: absolute;
-  top: 700px;
+  top: 90px;
 }
 
 tr{

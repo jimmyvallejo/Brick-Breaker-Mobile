@@ -26,9 +26,9 @@ const leaderboard = document.createElement('table')
 leaderboard.setAttribute('id', 'leaderboard');
 const leaderTitle = document.createElement('h3')
 leaderTitle.innerHTML = "LEADERBOARDS:";
-const loseDisplay = document.createElement('h2')
-loseDisplay.innerHTML = "YOU LOSE";
-loseDisplay.setAttribute('id', 'loseDisplay');
+// const loseDisplay = document.createElement('h2')
+// loseDisplay.innerHTML = "YOU LOSE";
+// loseDisplay.setAttribute('id', 'loseDisplay');
 
 
 const interval = setInterval(updateGameArea, 20);
@@ -52,7 +52,7 @@ localStorage.setItem("score", scoreString);
 let jsonString = localStorage.getItem("score");
 let scores = JSON.parse(jsonString);
 
-let highScores = JSON.parse(localStorage.getItem('highScores'))
+let highScores = JSON.parse(localStorage.getItem('highScores')).slice(0,6)
 console.log(highScores);
 
 
@@ -70,7 +70,7 @@ console.log(highScores);
     existing.push(value);
     let sorted = existing.sort(function(a, b) {
       return a.point - b.point;
-    });
+    }).slice(0,6);
     
     sorted.forEach((score)=> {
       let row = leaderboard.insertRow(score);
@@ -89,22 +89,21 @@ console.log(highScores);
 // Draws Canvas on document directly from the JS, as well as functions to clear canvas and stop animations
 
 const myGameArea = {
-    canvas: document.createElement('canvas'),
-    start: function(){
-        this.canvas.width = 900;
-        this.canvas.height = 500;
-        this.context = this.canvas.getContext('2d');
-        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-    },
-     clear: function(){
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-     },
-     stop: function() {
-        clearInterval(this.interval);
-      }
-     
+  canvas: document.createElement('canvas'),
+  start: function(){
+      this.canvas.width = 500;
+      this.canvas.height = 300;
+      this.context = this.canvas.getContext('2d');
+      document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+  },
+   clear: function(){
+      this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+   },
+   stop: function() {
+      clearInterval(this.interval);
+    }
+   
 };
-
 const ctx = myGameArea.context;
 
 // Class component reused for bricks, ball and paddle. Update, newPos and move are for the purpose of updating the game area every redraw
@@ -130,19 +129,18 @@ class Component {
     }
 
     newPos(){
-        
-        this.y += this.speedY;
-        if (this.x < 0){
-            this.x =+ this.speedX;
-       } else if (this.x > myGameArea.canvas.width - 172){
-        this.x = myGameArea.canvas.width - 172;
-        this.x -= this.speedX;
-       }
-        else {
-        this.x += this.speedX;
-       }
-        
-    }
+      this.y += this.speedY;
+      if (this.x < 0){
+          this.x =+ this.speedX;
+     } else if (this.x > myGameArea.canvas.width - this.width){
+      this.x = myGameArea.canvas.width - this.width;
+      this.x -= this.speedX;
+     }
+      else {
+      this.x += this.speedX;
+     }
+      
+  }
 
     move(){
         this.x += this.velocityX
@@ -195,19 +193,19 @@ class TextComponent{
 
 const score = new TextComponent(`Score: ${changeScore.point}`, 20, 30, "20px Lucida Console", "black");
 
-const level = new TextComponent(`${levelCount}`,450, 35, "30px Lucida Console",
+const level = new TextComponent(`${levelCount}`,250, 34, "25px Lucida Console",
 "black");
 
-const player = new Component(175, 20, '#C0DEFF', 370, 480);
-const ball = new Component(20, 20, "white", 440, 200, 0, 0);
+const player = new Component(100, 10, '#C0DEFF', 200, 290);
+const ball = new Component(10, 10, "white", 245, 150, 0, 0);
 
 const lives = [
-  new ImageComponent("Images/87.png", 862, 15, 20, 20),
-  new ImageComponent("Images/87.png", 840, 15, 20, 20),
-  new ImageComponent("Images/87.png", 818, 15, 20, 20)
+  new ImageComponent("Images/87.png", 460, 15, 20, 20),
+  new ImageComponent("Images/87.png", 438, 15, 20, 20),
+  new ImageComponent("Images/87.png", 416, 15, 20, 20)
 ];
 
-const levelImg = new ImageComponent("Images/clipart851029.png",425 ,15, 20, 20)
+const levelImg = new ImageComponent("Images/clipart851029.png", 225, 15, 20, 20);
 
 
 
@@ -248,22 +246,19 @@ let brickRowCount = 8;
 let bricks = [];
 
 
-    const brickWidth = 100;
-    const brickHeight = 22;
-    const brickPadding = 10;
-    const brickOffsetTop = 70;
-    const brickOffsetLeft = 15;
+const brickWidth = 56;
+const brickHeight = 15;
+const brickPadding = 5;
+const brickOffsetTop = 50;
+const brickOffsetLeft = 10;
 
-
-//  Function to generate bricks based on properties above 
-
-    function generateBricks(){
-   for (let c = 0; c < brickColumnCount; c++){
+function generateBricks(){
+  for (let c = 0; c < brickColumnCount; c++){
     for (let r = 0; r < brickRowCount; r++){
-        const brickX = (r * (brickWidth + brickPadding)) + brickOffsetLeft;
-        const brickY = (c * (brickHeight + brickPadding) + brickOffsetTop);
+      const brickX = (r * (brickWidth + brickPadding)) + brickOffsetLeft;
+      const brickY = (c * (brickHeight + brickPadding) + brickOffsetTop);
       
-     const brick = new Component (brickWidth, brickHeight, "red", brickX, brickY);
+      const brick = new Component(brickWidth, brickHeight, "red", brickX, brickY);
       bricks.push(brick);
     }
   }
@@ -312,24 +307,24 @@ function collisionDetectionPlayer() {
 // Collision detection between ball and 4 walls, bottom wall decrements life variable and checks for lose condition
 
 function collisionDetectionWall(){
-    if (ball.y > 500 - 20){
-       life--;
-       updateLives();
-       resetBall();
-       gameOver();
-     } if (ball.x < 0){
-        ball.velocityX = -ball.velocityX;
-        ball.velocityX = ball.velocityX + 0.5;
-     } if (ball.x > 900 - 20){
-        ball.velocityX = -ball.velocityX;
-     } if (ball.y < 0 ){
-        ball.velocityY = -ball.velocityY;
-     } if (player.x === 500){
-        player.speedX = 0;
-     } if (player.x === 0){
-        player.speedX === 0;
-     }
-    }
+  if (ball.y > 300 - 10){
+     life--;
+     updateLives();
+     resetBall();
+     gameOver();
+   } if (ball.x < 0){
+      ball.velocityX = -ball.velocityX;
+      ball.velocityX = ball.velocityX + 0.5;
+   } if (ball.x > 500 - 10){
+      ball.velocityX = -ball.velocityX;
+   } if (ball.y < 0 ){
+      ball.velocityY = -ball.velocityY;
+   } if (player.x === 500 - 100){
+      player.speedX = 0;
+   } if (player.x === 0){
+      player.speedX === 0;
+   }
+  }
 
  let maxVelocityX = 6;
  let maxVelocityY = 5;
@@ -404,7 +399,6 @@ function gameOver(){
     document.body.appendChild(button);
     document.body.appendChild(leaderTitle);
     document.body.appendChild(leaderboard);
-    document.body.appendChild(loseDisplay);
     addToLocalHighScoreArray(changeScore);
   }
 }
@@ -413,8 +407,8 @@ function gameOver(){
 // Function to reset ball on life being lost or level going up
 
 function resetBall(){
-  ball.x = 440;
-  ball.y = 240;
+  ball.x = 245;
+  ball.y = 150;
 }
 
 
