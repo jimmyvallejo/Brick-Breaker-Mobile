@@ -1,122 +1,111 @@
-
-
-body{
-    display: flex;
-    background-color: #2B3467;
-    flex-direction: column;
-    align-items: center;
-    width: 360px;
-    height: 180px;
-    text-align: center;
-
+body {
+  display: flex;
+  background-color: #2B3467;
+  flex-direction: column;
+  align-items: center;
+  max-width: 360px;
+  min-height: 160px;
+  height: auto;
+  text-align: center;
+  margin: 0 auto;
+  border: 1px solid ;
 }
 
-#div{
-   display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    width: 360px;
-    height: 220px;
-
+#div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 360px;
+  height: 160px;
+  border: 1px solid ;
 }
-
 
 h1 {
-    font-family: 'Silkscreen', cursive;
-    font-size: 25px;
+  font-family: 'Silkscreen', cursive;
+  font-size: 20px;
 }
 
-h2{
-  font-size: 25px;
+h2 {
+  font-size: 20px;
   font-family: 'Silkscreen', cursive;
   position: absolute;
   top: 30px;
 }
 
-
-h3{
+h3 {
   font-family: 'Silkscreen', cursive;
   position: absolute;
-  top: 45px;
+  top: 40px;
 }
 
-#restart{
+#restart {
   position: absolute;
-  top: 30px;
+  top: 20px;
 }
 
-
-#new-game{
- position: absolute;
- top: 250px
+#new-game {
+  position: absolute;
+  top: 250px;
 }
 
-button{
-    width: 200px;
-    height: 30px;
-    font-size: 20px;
-    font-family: 'Silkscreen';
-    letter-spacing: 2px;
-    
+button {
+  width: 150px;
+  height: 30px;
+  font-size: 16px;
+  font-family: 'Silkscreen';
+  letter-spacing: 1px;
 }
 
-footer{
-    margin-top: 30px;
-    opacity: 0;
+footer {
+  margin-top: 30px;
+  opacity: 0;
 }
 
 #leaderboard {
   font-family: 'Silkscreen';
   position: absolute;
-  top: 90px;
+  top: 85px;
+  height: 70px;
+  overflow-y: scroll;
+  display: block;
 }
 
-tr{
+tr {
   padding-top: 10px;
 }
 
-.github{
-    text-decoration: none;
-    font-family: 'Silkscreen', cursive;
-    color: #fff;
-}
-
-#leaderboard {
-  font-family: 'Silkscreen';
-  position: absolute;
-  top: 90px;
-  height: 100px; 
-  overflow-y: scroll; 
-  display: block; 
+.github {
+  text-decoration: none;
+  font-family: 'Silkscreen', cursive;
+  color: #fff;
 }
 
 .github:visited {
-color: black;
+  color: black;
 }
 
-.git{
-    width: 20px;
-    height: 20px;
+.git {
+  width: 20px;
+  height: 20px;
 }
 
 @import url('https://fonts.googleapis.com/css?family=Montserrat:600&display=swap');
 
-
 span {
   position: relative;
   display: inline-flex;
-  width: 90px;
-  height: 27.5px;
-  margin: 0 7.5px;
+  width: 80px;
+  height: 24px;
+  margin: 0 5px;
   perspective: 500px;
 }
 
 span a {
-  font-size: 9.5px;
+  font-size: 8px;
   letter-spacing: 0.5px;
   transform-style: preserve-3d;
-  transform: translateZ(-12.5px);
+  transform: translateZ(-10px);
   transition: transform .25s;
   font-family: 'Silkscreen', sans-serif;
 }
@@ -125,34 +114,33 @@ span a:before,
 span a:after {
   position: absolute;
   content: "START";
-  height: 27.5px;
-  width: 90px;
+  height: 24px;
+  width: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2.5px solid black;
+  border: 2px solid black;
   box-sizing: border-box;
-  border-radius: 2.5px;
+  border-radius: 2px;
 }
 
 span a:before {
   color: #fff;
   background: #000;
-  transform: rotateY(0deg) translateZ(12.5px);
+  transform: rotateY(0deg) translateZ(10px);
 }
 
 span a:after {
   color: #000;
-  transform: rotateX(90deg) translateZ(12.5px);
+  transform: rotateX(90deg) translateZ(10px);
   background: #fff;
 }
 
 span a:hover {
-  transform: translateZ(-12.5px) rotateX(-90deg);
+  transform: translateZ(-10px) rotateX(-90deg);
 }
 
 .button-container {
- 
   position: relative;
   margin-top: 8px;
   left: 50%;
@@ -160,18 +148,16 @@ span a:hover {
   display: flex;
   justify-content: space-between;
   flex-direction: row;
-  align-items: flex-end;
   width: 100%;
   height: 30px;
-
 }
 
 .controls {
-  width: 50px; 
-  height: 25px; 
-  padding: 5px;
+  width: 50px;
+  height: 20px;
+  padding: 3px;
   margin: 5px;
-  font-size: 12px; 
+  font-size: 12px;
   letter-spacing: 0.5px;
   background-color: #C0DEFF;
   border: none;
@@ -180,20 +166,18 @@ span a:hover {
 }
 
 #leaderboard::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
   height: 100%;
 }
 
 #leaderboard::-webkit-scrollbar-track {
   background-color: #01040f;
   border-radius: 5px;
-  
 }
 
 #leaderboard::-webkit-scrollbar-thumb {
   background-color: #C0DEFF;
   border-radius: 4px;
-  
 }
 
 #leaderboard::-webkit-scrollbar-thumb:hover {

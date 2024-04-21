@@ -497,7 +497,7 @@ document.addEventListener("keyup", (e) => {
   player.speedY = 0;
 });
 
-span.addEventListener("click", function () {
+span.addEventListener("touchstart", function () {
   div.remove();
   document.body.appendChild(buttonContainer);
   document.body.appendChild(leftButton);
@@ -508,10 +508,10 @@ span.addEventListener("click", function () {
   levelOneMusic.play();
 });
 
-button.addEventListener("click", function () {
+button.addEventListener("touchstart", function () {
   location.reload();
 });
 
-button2.addEventListener("click", function () {
+button2.addEventListener("touchstart", function () {
   location.reload();
 });
