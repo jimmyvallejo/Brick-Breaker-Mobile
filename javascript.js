@@ -38,9 +38,10 @@ const interval = setInterval(updateGameArea, 20);
 
 
 let life = 4;
+let playerName = 1
 let levelCount = 1;
 let changeScore = {
-  name: prompt("What is your name?", "Player One"),
+  name: `Player ${playerName}`,
   point: 0
   
 }
@@ -385,7 +386,8 @@ function gameWin(){
   document.body.appendChild(leaderTitle);
   document.body.appendChild(leaderboard);
   addToLocalHighScoreArray(changeScore);
-  
+  playerName += 1
+ 
 }
 
 function gameOver(){
@@ -400,6 +402,7 @@ function gameOver(){
     document.body.appendChild(leaderTitle);
     document.body.appendChild(leaderboard);
     addToLocalHighScoreArray(changeScore);
+    playerName += 1
   }
 }
 
